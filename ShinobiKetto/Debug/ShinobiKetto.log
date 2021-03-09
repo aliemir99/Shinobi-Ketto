@@ -1,0 +1,10 @@
+﻿  Application.cpp
+  CharacterSelectionState.cpp
+  GameState.cpp
+  HowToPlayState.cpp
+  Source.cpp
+  SpriteNode.cpp
+  TitleState.cpp
+  World.cpp
+  Generating Code...
+  ShinobiKetto.vcxproj -> C:\Users\aliem\source\repos\ShinobiKetto\Debug\ShinobiKetto.exe
