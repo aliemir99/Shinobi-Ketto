@@ -17,9 +17,9 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 /*
-	Team: std::pair(Ali-Ibrahim)
-	Date: 2020-12-07
-	Purpose: Create a frogger replica using GEX Engine
+	Team: 
+	Date: 
+	Purpose: 
 */
 
 // Forward declaration
@@ -61,7 +61,8 @@ private:
 	void								handleCollisions();
 	bool								matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2);
 
-	void								setPlayerHudScoreText(size_t score);
+	void								setRoundText(size_t score);
+	void								setTimerText(float time);
 	void								resetHealthBars();
 private:
 	enum Layer
@@ -110,7 +111,7 @@ private:
 	std::vector<sf::Sprite>				playerLives;
 
 
-	sf::Text							playerScoreHud;
+	sf::Text							roundHud;
 	sf::Text							timerText;
 
 	sf::RectangleShape					leftHealthBar;
@@ -123,6 +124,8 @@ private:
 	sf::CircleShape						rightLight1;
 	sf::CircleShape						rightLight2;
 	sf::CircleShape						rightLight3;
+
+	float								roundTimer;
 
 
 };

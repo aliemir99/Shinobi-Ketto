@@ -66,10 +66,10 @@ MapSelectionState::MapSelectionState(StateStack& stack, Context context)
 	exitOption.setPosition((context.window->getView().getSize().x) - 150, (context.window->getView().getSize().y) - 200);
 	mOptions.push_back(exitOption);
 
-	backgroundFilePaths.insert(std::make_pair(OptionNames::M1, "Media/Textures/Fight/jungleBackground.png"));
-	backgroundFilePaths.insert(std::make_pair(OptionNames::M2, "Media/Textures/Fight/map2Background.png"));
-	backgroundFilePaths.insert(std::make_pair(OptionNames::M3, "Media/Textures/Fight/map3Background.png"));
-	backgroundFilePaths.insert(std::make_pair(OptionNames::M4, "Media/Textures/Fight/map4Background.png"));
+	backgroundFilePaths.insert(std::make_pair(OptionNames::M1, "Media/Textures/Fight/background.png"));
+	backgroundFilePaths.insert(std::make_pair(OptionNames::M2, "Media/Textures/Fight/background2.png"));
+	backgroundFilePaths.insert(std::make_pair(OptionNames::M3, "Media/Textures/Fight/background3.png"));
+	backgroundFilePaths.insert(std::make_pair(OptionNames::M4, "Media/Textures/Fight/background4.png"));
 
 	platformFilePaths.insert(std::make_pair(OptionNames::M1, "Media/Textures/Fight/junglePlatform.png"));
 	platformFilePaths.insert(std::make_pair(OptionNames::M2, "Media/Textures/Fight/forestPlatform.png"));

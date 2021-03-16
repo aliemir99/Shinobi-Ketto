@@ -9,9 +9,9 @@
 #include "Category.h"
 #include "SoundPlayer.h"
 /*
-    Team: std::pair(Ali-Ibrahim)
-    Date: 2020-12-07
-    Purpose: Create a frogger replica using GEX Engine
+    Team: 
+    Date: 
+    Purpose: 
 */
 class Actor : public Entity
 {

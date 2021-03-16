@@ -1,10 +1,3 @@
-﻿  Application.cpp
-  CharacterSelectionState.cpp
-  GameState.cpp
-  HowToPlayState.cpp
-  Source.cpp
-  SpriteNode.cpp
-  TitleState.cpp
-  World.cpp
-  Generating Code...
+﻿  World.cpp
+C:\Users\aliem\source\repos\ShinobiKetto\ShinobiKetto\World.cpp(130,20): warning C4305: '-=': truncation from 'double' to 'float'
   ShinobiKetto.vcxproj -> C:\Users\aliem\source\repos\ShinobiKetto\Debug\ShinobiKetto.exe

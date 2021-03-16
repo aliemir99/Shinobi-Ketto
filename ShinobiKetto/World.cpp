@@ -4,6 +4,7 @@
 #include "DataTables.h"
 #include "SoundNode.h"
 #include <iostream>
+
 /*
 	Team:
 	Date:
@@ -45,6 +46,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder_t& fonts, SoundPlayer& s
 	, p2StartingPos(worldView.getSize().x / 2.f + worldView.getSize().x / 4.f, 1000)
 	, p1Rounds(0)
 	, p2Rounds(0)
+	, roundTimer(90)
 
 {
 	sceneTexture.create(target.getSize().x, target.getSize().y);
@@ -52,14 +54,17 @@ World::World(sf::RenderTarget& outputTarget, FontHolder_t& fonts, SoundPlayer& s
 	buildScene();
 	worldView.setCenter(spawnPosition);
 
-	//playerScoreHud.setFont(fonts.get(FontID::Main));
-	//playerScoreHud.setString("Score:");
-	//playerScoreHud.setPosition(620.f-playerScoreHud.getGlobalBounds().width,650.f);
-	//
-	//timerText.setFont(fonts.get(FontID::Main));
-	//timerText.setString("Timer");
-	//timerText.setPosition(300.f,625.f);
-
+	roundHud.setFont(fonts.get(FontID::Main));
+	roundHud.setString("Round 1");
+	roundHud.setScale(2.f,2.f);
+	roundHud.setPosition((worldView.getSize().x / 2.f)-125,35);
+	roundHud.setFillColor(sf::Color::Red);
+	
+	timerText.setFont(fonts.get(FontID::Main));
+	timerText.setString("Timer");
+	timerText.setScale(2.f, 2.f);
+	timerText.setPosition((worldView.getSize().x / 2.f)-50,130.f);
+	timerText.setFillColor(sf::Color::Yellow);
 
 	leftHealthBar.setFillColor(sf::Color::Green);
 	leftHealthBar.setPosition(235.f, 140.f);
@@ -118,12 +123,22 @@ void World::update(sf::Time dt)
 		isRoundOver = true;
 		p1Rounds++;
 	}
-	if (p1Rounds >= 3) {
-		//player 1 wins
+	setRoundText(p1Rounds + p2Rounds + 1);
+
+	if (roundTimer > 0) {
+		setTimerText(roundTimer);
+		roundTimer -= .02;
 	}
-	else if (p2Rounds >= 3) {
-		//player 2 wins
+	else {
+		isRoundOver = true;
+		if (leftHealthBar.getGlobalBounds().width > rightHealthBar.getGlobalBounds().width) {
+			p1Rounds++;
+		}
+		else {
+			p2Rounds++;
+		}
 	}
+
 }
 
 void World::draw()
@@ -138,7 +153,8 @@ void World::draw()
 	//target.draw(timerText);
 	target.draw(leftHealthBar);
 	target.draw(rightHealthBar);
-
+	target.draw(roundHud);
+	target.draw(timerText);
 	//DRAW ONLY WHEN FIRST PLAYER WINS A ROUND
 	if (p1Rounds >= 3) {
 		target.draw(leftLight1);
@@ -230,10 +246,9 @@ void World::buildScene()
 	//rightHud->setScale(2.2f,2.2f);
 	sceneLayers[Background]->attachChild(std::move(rightHud));
 
-	//PLATFORM MIGHT NEED TO BE MADE AN ACTOR FOR COLLISION BOX AND BOUNDING RECT
 	std::unique_ptr<Actor> platform(new Actor(Actor::Type::Platform, textures, fonts, Category::Platform));
 	platformActor = platform.get();
-	platformActor->setPosition(0, 935);
+	platformActor->setPosition(0, 945);
 	//platformActor->setScale(1.2f, 1.2f);
 	sceneLayers[UpperAir]->attachChild(std::move(platform));
 
@@ -403,9 +418,15 @@ bool World::matchesCategories(SceneNode::Pair& colliders, Category::Type type1, 
 	}
 }
 
-void World::setPlayerHudScoreText(size_t score)
+void World::setRoundText(size_t score)
 {
-	playerScoreHud.setString("Score: " + std::to_string(score));
+	roundHud.setString("Round " + std::to_string(score));
+
+}
+void World::setTimerText(float time)
+{
+	
+	timerText.setString(std::to_string((int)time));
 
 }
 
@@ -421,6 +442,7 @@ void World::resetRound()
 	playerActor->setPosition(p1StartingPos);
 	player2Actor->setPosition(p2StartingPos);
 	resetHealthBars();
+	roundTimer = 90;
 	playerActor->setState(Actor::State::Idle);
 	player2Actor->setState(Actor::State::Idle);
 	isRoundOver = false;
