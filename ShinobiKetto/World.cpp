@@ -56,14 +56,14 @@ World::World(sf::RenderTarget& outputTarget, FontHolder_t& fonts, SoundPlayer& s
 
 	roundHud.setFont(fonts.get(FontID::Main));
 	roundHud.setString("Round 1");
-	roundHud.setScale(2.f,2.f);
-	roundHud.setPosition((worldView.getSize().x / 2.f)-125,35);
+	roundHud.setScale(2.f, 2.f);
+	roundHud.setPosition((worldView.getSize().x / 2.f) - 125, 35);
 	roundHud.setFillColor(sf::Color::Red);
-	
+
 	timerText.setFont(fonts.get(FontID::Main));
 	timerText.setString("Timer");
 	timerText.setScale(2.f, 2.f);
-	timerText.setPosition((worldView.getSize().x / 2.f)-50,130.f);
+	timerText.setPosition((worldView.getSize().x / 2.f) - 50, 130.f);
 	timerText.setFillColor(sf::Color::Yellow);
 
 	leftHealthBar.setFillColor(sf::Color::Green);
@@ -101,19 +101,34 @@ void World::update(sf::Time dt)
 	player2Actor->setVelocity(0.f, 0.f);
 	platformActor->setVelocity(0.f, 0.f);
 
-
+	
 	while (!commandQueue.isEmpty()) {
 		sceneGraph.onCommand(commandQueue.pop(), dt);
 	}
 	adaptPlayerVelocity();
-	//Collision detection and response(may destroy entities)
 
-	//spawnEnemies();
+	//Collision detection and response(may destroy entities)
 	handleCollisions();
 
+	
 	sceneGraph.update(dt, getCommands());
 	adaptPlayerPosition();
-	//decreaseTimer();
+	if (playerActor->isBlocking) {
+		playerActor->shieldTimer -= .1;
+		
+	}
+	if (playerActor->shieldTimer <= 0) {
+		playerActor->deactivateShield();
+	}
+	if (player2Actor->isBlocking ) {
+		player2Actor->shieldTimer -= .1;
+		
+	}
+	if (player2Actor->shieldTimer <= 0) {
+		player2Actor->deactivateShield();
+	}
+
+
 	updateSounds();
 	if (playerActor->getState() == Actor::State::Dead && playerActor->isCurrentAnimationFinished()) {
 		isRoundOver = true;
@@ -145,16 +160,18 @@ void World::draw()
 {
 	target.setView(worldView);
 	target.draw(sceneGraph);
-	//target.draw(playerScoreHud);
 
-	//for (auto& playerLife : playerLives) {
-	//	target.draw(playerLife);
-	//}
-	//target.draw(timerText);
 	target.draw(leftHealthBar);
 	target.draw(rightHealthBar);
 	target.draw(roundHud);
 	target.draw(timerText);
+
+	if(playerActor->isBlocking)
+		target.draw(playerActor->shield);
+	
+	if (player2Actor->isBlocking)
+		target.draw(player2Actor->shield);
+	
 	//DRAW ONLY WHEN FIRST PLAYER WINS A ROUND
 	if (p1Rounds >= 3) {
 		target.draw(leftLight1);
@@ -222,7 +239,6 @@ void World::buildScene()
 
 	//prepare background texture
 	sf::Texture& texture = textures.get(TextureID::Background);
-	//texture.setRepeated(true);
 
 	float viewHeight = worldView.getSize().y;
 	sf::IntRect textureRect(worldBounds);
@@ -236,21 +252,19 @@ void World::buildScene()
 	std::unique_ptr<SpriteNode> leftHud(new SpriteNode(leftHudTexture));
 	leftHud->setPosition(50, 100);
 	leftHud->setScale(1.5f, 1.5f);
-	//leftHud->setScale(2.2f,2.2f);
 	sceneLayers[Background]->attachChild(std::move(leftHud));
 
 	sf::Texture& rightHudTexture = textures.get(TextureID::RightHUD);
 	std::unique_ptr<SpriteNode> rightHud(new SpriteNode(rightHudTexture));
 	rightHud->setPosition(1260, 100);
 	rightHud->setScale(1.5f, 1.5f);
-	//rightHud->setScale(2.2f,2.2f);
 	sceneLayers[Background]->attachChild(std::move(rightHud));
 
 	std::unique_ptr<Actor> platform(new Actor(Actor::Type::Platform, textures, fonts, Category::Platform));
 	platformActor = platform.get();
-	platformActor->setPosition(0, 945);
-	//platformActor->setScale(1.2f, 1.2f);
-	sceneLayers[UpperAir]->attachChild(std::move(platform));
+	platformActor->setPosition(0, 955);
+	platformActor->setScale(1.2f, 1.2f);
+	sceneLayers[Background]->attachChild(std::move(platform));
 
 	//add player character
 	std::unique_ptr<Actor> leader(new Actor(p1Char, textures, fonts, Category::Player1));
@@ -267,6 +281,7 @@ void World::buildScene()
 	player2Actor->setVelocity(80.f, 0.f);
 	sceneLayers[UpperAir]->attachChild(std::move(player2));
 	//addEnemies();
+
 
 }
 
@@ -425,7 +440,7 @@ void World::setRoundText(size_t score)
 }
 void World::setTimerText(float time)
 {
-	
+
 	timerText.setString(std::to_string((int)time));
 
 }
@@ -482,21 +497,21 @@ void World::handleCollisions()
 		{
 			if (playerActor->getBoundingRect().intersects(player2Actor->getBoundingRect()))
 			{
-				//P1
+				//P1 runs into player 2
 				if (playerActor->getDirection() == Actor::Direction::Right && playerActor->getState() == Actor::State::Run) {
 					player2Actor->setPosition(player2Actor->getPosition().x + 10, player2Actor->getPosition().y);
 				}
 				else if (playerActor->getDirection() == Actor::Direction::Left && playerActor->getState() == Actor::State::Run) {
 					player2Actor->setPosition(player2Actor->getPosition().x - 10, player2Actor->getPosition().y);
 				}
-				//P2
+				//P2 runs into player 1
 				if (player2Actor->getDirection() == Actor::Direction::Right && player2Actor->getState() == Actor::State::Run) {
 					playerActor->setPosition(playerActor->getPosition().x + 10, playerActor->getPosition().y);
 				}
 				else if (player2Actor->getDirection() == Actor::Direction::Left && player2Actor->getState() == Actor::State::Run) {
 					playerActor->setPosition(playerActor->getPosition().x - 10, playerActor->getPosition().y);
 				}
-				//P1
+				//this doesn't make that much sense
 				if (playerActor->getDirection() == Actor::Direction::Right && player2Actor->getDirection() == Actor::Direction::Left) {
 					if (playerActor->getState() == Actor::State::Run && player2Actor->getState() == Actor::State::Run) {
 						playerActor->setState(Actor::State::Idle);
@@ -506,7 +521,7 @@ void World::handleCollisions()
 						player2Actor->setState(Actor::State::Idle);
 					}
 				}
-				//P2
+				//this also doesnt make much sense
 				if (player2Actor->getDirection() == Actor::Direction::Right && playerActor->getDirection() == Actor::Direction::Left) {
 					if (playerActor->getState() == Actor::State::Run && player2Actor->getState() == Actor::State::Run) {
 						playerActor->setState(Actor::State::Idle);
@@ -519,35 +534,86 @@ void World::handleCollisions()
 
 
 
-				//P1
+				//P1 attacks and hits
 				if (playerActor->getState() == Actor::State::Attack1) {
 
-					player2Actor->setState(Actor::State::TakeHit);
-					dealDamage("p2");
-
-
+					if (player2Actor->isBlocking) {
+						player2Actor->activateShield();
+						sounds.play(EffectID::Block);
+						//depending on the direction of the player push them back
+						if (player2Actor->getDirection() == Actor::Direction::Left) {
+							player2Actor->setPosition(player2Actor->getPosition().x + 10, player2Actor->getPosition().y);
+							player2Actor->shield.setPosition(player2Actor->shield.getPosition().x+10, player2Actor->shield.getPosition().y);
+						}
+						else { // player is facing right
+							player2Actor->setPosition(player2Actor->getPosition().x - 10, player2Actor->getPosition().y);
+							player2Actor->shield.setPosition(player2Actor->shield.getPosition().x - 10, player2Actor->shield.getPosition().y);
+						}
+					}
+					else {
+						player2Actor->setState(Actor::State::TakeHit);
+						dealDamage("p2");
+					}
 				}
 				if (playerActor->getState() == Actor::State::Attack2) {
 
-					player2Actor->setState(Actor::State::TakeHit);
-					dealDamage("p2");
-
+					if (player2Actor->isBlocking) {
+						player2Actor->activateShield();
+						sounds.play(EffectID::Block);
+						if (player2Actor->getDirection() == Actor::Direction::Left) {
+							player2Actor->setPosition(player2Actor->getPosition().x + 10, player2Actor->getPosition().y);
+							player2Actor->shield.setPosition(player2Actor->shield.getPosition().x + 10, player2Actor->shield.getPosition().y);
+						}
+						else { // player is facing right
+							player2Actor->setPosition(player2Actor->getPosition().x - 10, player2Actor->getPosition().y);
+							player2Actor->shield.setPosition(player2Actor->shield.getPosition().x - 10, player2Actor->shield.getPosition().y);
+						}					
+					}
+					else {
+						player2Actor->setState(Actor::State::TakeHit);
+						dealDamage("p2");
+					}
 				}
-				//P2
+				//P2 attacks and hits
 				if (player2Actor->getState() == Actor::State::Attack1) {
-
-					playerActor->setState(Actor::State::TakeHit);
-					dealDamage("p1");
-
+					if (playerActor->isBlocking) {
+						playerActor->activateShield();
+						sounds.play(EffectID::Block);
+						if (playerActor->getDirection() == Actor::Direction::Left) {
+							playerActor->setPosition(playerActor->getPosition().x + 10, playerActor->getPosition().y);
+							playerActor->shield.setPosition(playerActor->shield.getPosition().x + 10, playerActor->shield.getPosition().y);
+						}
+						else { // player is facing right
+							playerActor->setPosition(playerActor->getPosition().x - 10, playerActor->getPosition().y);
+							playerActor->shield.setPosition(playerActor->shield.getPosition().x - 10, playerActor->shield.getPosition().y);
+						}					
+					}
+					else {
+						playerActor->setState(Actor::State::TakeHit);
+						dealDamage("p1");
+					}			
 				}
 				if (player2Actor->getState() == Actor::State::Attack2) {
 
-					playerActor->setState(Actor::State::TakeHit);
-					dealDamage("p1");
-
+					if (playerActor->isBlocking) {
+						playerActor->activateShield();
+						sounds.play(EffectID::Block);
+						if (playerActor->getDirection() == Actor::Direction::Left) {
+							playerActor->setPosition(playerActor->getPosition().x + 10, playerActor->getPosition().y);
+							playerActor->shield.setPosition(playerActor->shield.getPosition().x + 10, playerActor->shield.getPosition().y);
+						}
+						else { // player is facing right
+							playerActor->setPosition(playerActor->getPosition().x - 10, playerActor->getPosition().y);
+							playerActor->shield.setPosition(playerActor->shield.getPosition().x - 10, playerActor->shield.getPosition().y);
+						}
+					}
+					else {
+						playerActor->setState(Actor::State::TakeHit);
+						dealDamage("p1");
+					}
 				}
 			}
-
+			
 		}
 	}
 }

@@ -6,6 +6,11 @@ SpriteNode::SpriteNode(const sf::Texture& texture, const sf::IntRect& textureRec
 {
 }
 
+sf::Sprite SpriteNode::getSprite()
+{
+	return sprite;
+}
+
 
 void SpriteNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {

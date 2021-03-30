@@ -88,16 +88,13 @@ bool OptionsState::handleEvents(const sf::Event& event)
 	{
 		if (mOptionIndex == Option1) {
 			requestStackPop();
-			//requestStackPush(StateID::CharacterSelection);
-			//requestStackPush(StateID::Game);
 		}
 		else if (mOptionIndex == Option2) {
 			requestStackPop();
-			//requestStackPush(StateID::Options);
 		}
 		else if (mOptionIndex == Option3) {
 			requestStackPop();
-			//requestStackPush(StateID::HowToPlay);
+
 		}
 		else if (mOptionIndex == Exit) {
 			requestStackPop();

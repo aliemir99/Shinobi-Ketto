@@ -32,7 +32,6 @@ Application::Application()
 {
     window.setKeyRepeatEnabled(false);
 
-    //fonts.load(FontID::Main, "Media/Sansation.ttf");
     fonts.load(FontID::Main, "Media/GROBOLD.ttf");
     textures.load(TextureID::TitleScreen, "Media/Textures/Fight/shinobiKettoTitle.png");
     textures.load(TextureID::MenuScreen, "Media/Textures/Fight/menu.png");

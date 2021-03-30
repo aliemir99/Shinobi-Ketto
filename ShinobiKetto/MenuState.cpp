@@ -83,7 +83,6 @@ bool MenuState::handleEvents(const sf::Event& event)
 		if (mOptionIndex == Play) {
 			requestStackPop();
 			requestStackPush(StateID::CharacterSelection);
-			//requestStackPush(StateID::Game);
 		}
 		else if (mOptionIndex == Options) {
 			requestStackPop();

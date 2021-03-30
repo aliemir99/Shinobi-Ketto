@@ -33,11 +33,15 @@ Actor::Actor(Type type, const TextureHolder_t& textures, const FontHolder_t& fon
 	, isJumping(false)
 	, isFalling(false)
 	, isGrounded(true)
+	, isBlocking(false)
 	, canPlayDamageSound(true)
 	, gravitySpeed(300)
-	, groundHeight(95)
+	, groundHeight(870)
 	, JumpDuration(.45)
 	, category(player)
+	, shieldTexture()
+	, shield()
+	, shieldTimer(3)
 
 {
 	for (auto a : TABLE.at(type).animations)
@@ -62,10 +66,14 @@ Actor::Actor(Type type, const TextureHolder_t& textures, const FontHolder_t& fon
 		centerOrigin(sprite_);
 	}
 	if (type_ == Actor::Type::Platform) {
-		//centerOrigin(sprite_);
 		setState(Actor::State::Static);
 		setDirection(Actor::Direction::Static);
 	}
+	shieldTexture.loadFromFile("Media/Textures/Fight/blockShieldTransparent.png");
+	shield.setTexture(shieldTexture);
+	shield.setScale(3.f, 3.f);
+	shield.setPosition(this->getPosition().x - 85, this->getPosition().y - 90);
+	shieldTimer = 5;
 
 }
 unsigned int Actor::getCategory() const
@@ -127,10 +135,17 @@ void Actor::updateMovementPattern(sf::Time dt)
 }
 sf::FloatRect Actor::getBoundingRect() const
 {
+	
 	auto box = getWorldTransform().transformRect(sprite_.getGlobalBounds());
-
+	if (type_ != Actor::Type::Platform) {
+		box.height -= 125;
+		box.width -= 5;
+		box.left -= 5;
+	}
 	return box;
 }
+
+
 float Actor::getMaxSpeed() const
 {
 	return TABLE.at(type_).speed;
@@ -142,10 +157,14 @@ bool Actor::isMarkedForRemoval() const
 
 void Actor::setState(State state)
 {
+
 	state_ = state;
 	if (Actor::Type::Hero1 == type_ || Actor::Type::Hero2 == type_ || Actor::Type::Hero3 == type_) {
+
 		animations_.at({ state_ }).restart();
+
 	}
+
 }
 Actor::State Actor::getState() const
 {
@@ -181,13 +200,18 @@ bool Actor::isCurrentAnimationFinished()
 {
 	return animations_[state_].isFinished();
 }
+void Actor::deactivateShield()
+{
+	isBlocking = false;
+	shieldTimer = 5.f;
+}
+void Actor::activateShield()
+{
+	shield.setPosition(this->getPosition().x - 85, this->getPosition().y - 90);
+}
 void Actor::updateStates()
 {
-
 	if (Actor::Type::Hero1 == type_ || Actor::Type::Hero2 == type_ || Actor::Type::Hero3 == type_) {
-		//auto pair = std::make_pair(state_, direction_);
-
-
 		if (isDestroyed())
 			state_ = Actor::State::Dead;
 
@@ -200,10 +224,7 @@ void Actor::updateStates()
 				soundplayer.play(EffectID::H3GetHit);
 		}
 		if (Actor::State::Dead == state_ && animations_[state_].isFinished()) {
-			//setState(Actor::State::Idle);
-			//this->repair(100);
-			//this->setPosition(350.f, 580.f);
-			//animations_[state_].restart();
+
 		}
 
 		if (Actor::State::TakeHit == state_ && animations_[state_].isStarting()) {
@@ -220,14 +241,13 @@ void Actor::updateStates()
 		}
 
 		if (Actor::State::Jump == state_ && animations_[state_].isFinished()) {
-
-
 			setState(Actor::State::Fall);
 		}
 		if (Actor::State::Fall == state_ && animations_[state_].isFinished()) {
-			if (this->getPosition().y >= 925) {
+			if (this->getPosition().y >= groundHeight) {
 				setState(Actor::State::Idle);
 				isFalling = false;
+				isGrounded = true;
 			}
 		}
 
@@ -244,10 +264,9 @@ void Actor::updateStates()
 		}
 
 		if (Actor::State::Attack1 == state_ && animations_[state_].isFinished()) {
-
 			setState(Actor::State::Attack2);
-
 		}
+
 		if (Actor::State::Attack2 == state_ && animations_[state_].isStarting()) {
 			if (Actor::Type::Hero1 == type_)
 				soundplayer.play(EffectID::H1Attack2);
@@ -255,14 +274,13 @@ void Actor::updateStates()
 				soundplayer.play(EffectID::H2Attack2);
 			if (Actor::Type::Hero3 == type_)
 				soundplayer.play(EffectID::H3Attack2);
-
 		}
+
 		if (Actor::State::Attack2 == state_ && animations_[state_].isFinished()) {
 
 			setState(Actor::State::Idle);
 		}
 	}
-	//std::cout << (int)getState() << " " << (int)getDirection() << std::endl;
 }
 
 
@@ -272,14 +290,12 @@ void Actor::updateCurrent(sf::Time dt, CommandQueue& commands)
 	updateSounds();
 	if (Actor::Type::Hero1 == type_ || Actor::Type::Hero2 == type_ || Actor::Type::Hero3 == type_) {
 		if (state_ != Actor::State::Dead) {
-			//auto pair = std::make_pair(state_, direction_);
 			auto rec = animations_.at(state_).update(dt);
 			sprite_.setTextureRect(rec);
 		}
 
 		if (state_ == State::Dead)
 		{
-			//auto pair = std::make_pair(state_, direction_);
 			auto rec = animations_.at(state_).update(dt);
 
 			auto x = sprite_.getPosition().x;
@@ -290,8 +306,10 @@ void Actor::updateCurrent(sf::Time dt, CommandQueue& commands)
 		centerOrigin(sprite_);
 		if (state_ != State::Dead) // dont move it while dying
 			Entity::updateCurrent(dt, commands);
-	}
 
+	
+	}
+	activateShield();
 	updateMovementPattern(dt);
 }
 void Actor::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

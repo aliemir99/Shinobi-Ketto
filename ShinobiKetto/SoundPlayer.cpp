@@ -30,6 +30,7 @@ SoundPlayer::SoundPlayer()
 	soundBuffers.load(EffectID::H3GetHit, "Media/Sound/girlGetHit.wav");
 	soundBuffers.load(EffectID::TakeDamage, "Media/Sound/takeDamage.wav");
 	soundBuffers.load(EffectID::MissAttack, "Media/Sound/missAttack.wav");
+	soundBuffers.load(EffectID::Block, "Media/Sound/block.wav");
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, -1.f);
 }

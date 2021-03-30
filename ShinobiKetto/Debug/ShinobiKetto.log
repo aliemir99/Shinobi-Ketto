@@ -1,2 +1,30 @@
-﻿  TitleState.cpp
+﻿  Actor.cpp
+C:\Users\aliem\source\repos\ShinobiKetto\ShinobiKetto\Actor.cpp(46,1): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Application.cpp
+  CharacterSelectionState.cpp
+  DataTables.cpp
+  GameOverState.cpp
+  GameState.cpp
+  HowToPlayState.cpp
+  MapSelectionState.cpp
+  MenuState.cpp
+  MusicPlayer.cpp
+  OptionsState.cpp
+  PauseState.cpp
+  Player.cpp
+  RoundOverState.cpp
+  SoundNode.cpp
+  SoundPlayer.cpp
+  Source.cpp
+  State.cpp
+  StateStack.cpp
+  TextNode.cpp
+  Generating Code...
+  Compiling...
+  TitleState.cpp
+  World.cpp
+C:\Users\aliem\source\repos\ShinobiKetto\ShinobiKetto\World.cpp(117,33): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aliem\source\repos\ShinobiKetto\ShinobiKetto\World.cpp(124,34): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aliem\source\repos\ShinobiKetto\ShinobiKetto\World.cpp(145,20): warning C4305: '-=': truncation from 'double' to 'float'
+  Generating Code...
   ShinobiKetto.vcxproj -> C:\Users\aliem\source\repos\ShinobiKetto\Debug\ShinobiKetto.exe

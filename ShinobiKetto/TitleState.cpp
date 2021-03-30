@@ -33,8 +33,6 @@ TitleState::TitleState(StateStack& stack, Context context)
 	centerOrigin(text);
 	text.setPosition(context.window->getView().getSize() / 2.f);
 
-	//Story.setPosition(context.window->getView().getSize().x/2, context.window->getView().getSize().y-200);
-
 	context.music->play(MusicID::TitleTheme);
 }
 

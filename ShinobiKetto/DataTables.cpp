@@ -32,12 +32,12 @@ std::map<Actor::Type, ActorData> initializeActorData()
 
 
 	data[Actor::Type::Hero1].animations[Actor::State::Fall].addFrameSet(hero1.getFramesFor("Fall"));
-	data[Actor::Type::Hero1].animations[Actor::State::Fall].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero1].animations[Actor::State::Fall].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero1].animations[Actor::State::Fall].setRepeating(false);
 
 
 	data[Actor::Type::Hero1].animations[Actor::State::Jump].addFrameSet(hero1.getFramesFor("Jump"));
-	data[Actor::Type::Hero1].animations[Actor::State::Jump].setDuration(sf::seconds(0.3f));
+	data[Actor::Type::Hero1].animations[Actor::State::Jump].setDuration(sf::seconds(0.5f));
 	data[Actor::Type::Hero1].animations[Actor::State::Jump].setRepeating(false);
 
 	data[Actor::Type::Hero1].animations[Actor::State::Run].addFrameSet(hero1.getFramesFor("Run"));
@@ -45,7 +45,7 @@ std::map<Actor::Type, ActorData> initializeActorData()
 	data[Actor::Type::Hero1].animations[Actor::State::Run].setRepeating(false);
 
 	data[Actor::Type::Hero1].animations[Actor::State::TakeHit].addFrameSet(hero1.getFramesFor("Take Hit"));
-	data[Actor::Type::Hero1].animations[Actor::State::TakeHit].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero1].animations[Actor::State::TakeHit].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero1].animations[Actor::State::TakeHit].setRepeating(false);
 
 
@@ -73,12 +73,12 @@ std::map<Actor::Type, ActorData> initializeActorData()
 
 
 	data[Actor::Type::Hero2].animations[Actor::State::Fall].addFrameSet(hero2.getFramesFor("Fall"));
-	data[Actor::Type::Hero2].animations[Actor::State::Fall].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero2].animations[Actor::State::Fall].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero2].animations[Actor::State::Fall].setRepeating(false);
 
 
 	data[Actor::Type::Hero2].animations[Actor::State::Jump].addFrameSet(hero2.getFramesFor("Jump"));
-	data[Actor::Type::Hero2].animations[Actor::State::Jump].setDuration(sf::seconds(0.3f));
+	data[Actor::Type::Hero2].animations[Actor::State::Jump].setDuration(sf::seconds(0.5f));
 	data[Actor::Type::Hero2].animations[Actor::State::Jump].setRepeating(false);
 
 	data[Actor::Type::Hero2].animations[Actor::State::Run].addFrameSet(hero2.getFramesFor("Run"));
@@ -86,7 +86,7 @@ std::map<Actor::Type, ActorData> initializeActorData()
 	data[Actor::Type::Hero2].animations[Actor::State::Run].setRepeating(false);
 
 	data[Actor::Type::Hero2].animations[Actor::State::TakeHit].addFrameSet(hero2.getFramesFor("Take hit"));
-	data[Actor::Type::Hero2].animations[Actor::State::TakeHit].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero2].animations[Actor::State::TakeHit].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero2].animations[Actor::State::TakeHit].setRepeating(false);
 
 	JsonFrameParser hero3 = JsonFrameParser("Media/Textures/Fight/hero3.json");
@@ -112,12 +112,12 @@ std::map<Actor::Type, ActorData> initializeActorData()
 
 
 	data[Actor::Type::Hero3].animations[Actor::State::Fall].addFrameSet(hero3.getFramesFor("Fall"));
-	data[Actor::Type::Hero3].animations[Actor::State::Fall].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero3].animations[Actor::State::Fall].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero3].animations[Actor::State::Fall].setRepeating(false);
 
 
 	data[Actor::Type::Hero3].animations[Actor::State::Jump].addFrameSet(hero3.getFramesFor("Jump"));
-	data[Actor::Type::Hero3].animations[Actor::State::Jump].setDuration(sf::seconds(0.3f));
+	data[Actor::Type::Hero3].animations[Actor::State::Jump].setDuration(sf::seconds(0.5f));
 	data[Actor::Type::Hero3].animations[Actor::State::Jump].setRepeating(false);
 
 	data[Actor::Type::Hero3].animations[Actor::State::Run].addFrameSet(hero3.getFramesFor("Run"));
@@ -125,7 +125,7 @@ std::map<Actor::Type, ActorData> initializeActorData()
 	data[Actor::Type::Hero3].animations[Actor::State::Run].setRepeating(false);
 
 	data[Actor::Type::Hero3].animations[Actor::State::TakeHit].addFrameSet(hero3.getFramesFor("Take Hit"));
-	data[Actor::Type::Hero3].animations[Actor::State::TakeHit].setDuration(sf::seconds(1.f));
+	data[Actor::Type::Hero3].animations[Actor::State::TakeHit].setDuration(sf::seconds(0.6f));
 	data[Actor::Type::Hero3].animations[Actor::State::TakeHit].setRepeating(false);
 
 

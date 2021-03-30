@@ -29,7 +29,6 @@ GameState::GameState(StateStack& stack, Context context)
 	}
 
 	context.sounds->play(EffectID::GongHit);
-	//context.music->play(MusicID::MissionTheme);
 }
 
 void GameState::draw()

@@ -27,6 +27,7 @@ enum class EffectID
 	H3GetHit,
 	TakeDamage,
 	MissAttack,
+	Block
 
 };
 
@@ -49,23 +50,29 @@ enum class TextureID
 	MapSelectionScreen,
 	OptionsScreen,
 	HowToPlayScreen,
+
 	p1Controls,
 	p2Controls,
+
 	Particle,
 
 	Background,
+
 	platform,
+
 	LeftHUD,
 	RightHUD,
+
 	Hero1,
-	//Hero1HUD,
 	Hero1Avatar,
+
 	Hero2,
-	//Hero2HUD,
 	Hero2Avatar,
+
 	Hero3,
-	//Hero3HUD,
 	Hero3Avatar,
+
+	BlockShield
 
 
 };

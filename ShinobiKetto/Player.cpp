@@ -6,9 +6,9 @@
 #include "State.h"
 
 /*
-	Team: std::pair(Ali-Ibrahim)
-	Date: 2020-12-07
-	Purpose: Create a frogger replica using GEX Engine
+	Team: 
+	Date: 
+	Purpose: 
 */
 
 
@@ -92,7 +92,7 @@ void Player::initializeActions()
 				a.setScale(-1 * a.getScale().x, a.getScale().y);
 				a.setDirection(Actor::Direction::Left);
 			}
-			if (a.getState() != Actor::State::Run && a.getPosition().y > 850)
+			if (a.getState() != Actor::State::Run && a.getPosition().y >= a.groundHeight)
 				a.setState(Actor::State::Run);
 			else {
 
@@ -108,12 +108,11 @@ void Player::initializeActions()
 				a.setScale(-1 * a.getScale().x, a.getScale().y);
 				a.setDirection(Actor::Direction::Right);
 			}
-			if (a.getState() != Actor::State::Run && a.getPosition().y > 850)
+			if (a.getState() != Actor::State::Run && a.getPosition().y >= a.groundHeight)
 				a.setState(Actor::State::Run);
 			else {
 
 			}
-
 
 			a.setVelocity(sf::Vector2f(10.f, 0.f));
 			a.move(sf::Vector2f(playerSpeed, 0.f));
@@ -124,7 +123,7 @@ void Player::initializeActions()
 		[jumpSpeed](Actor& a, sf::Time dt) {
 			auto playerPosfromTop = a.getBoundingRect().height
 				+ a.getPosition().y;
-			if (a.getPosition().y > 850) {
+			if (a.getPosition().y >= a.groundHeight) {
 
 
 				if (playerPosfromTop > 650.f) {
@@ -137,26 +136,24 @@ void Player::initializeActions()
 					a.setState(Actor::State::Jump);
 					a.accelerate(0.f, -jumpSpeed * 15);
 
-
-
-
 					a.isJumping = false;
 					a.isFalling = true;
 
 				}
+				a.isGrounded = true;
 			}
-			std::cout << playerPosfromTop << std::endl;
-
-
-
-			//std::cout << (int)a.getState() << " " << (int)a.getDirection() << std::endl;
-
 		});
 	actionBindings[Action::P1MoveDown].action = derivedAction<Actor>(
 		[playerSpeed](Actor& a, sf::Time dt) {
 			//the falling is going to be managed when jump animation is finished
-			a.setState(Actor::State::Fall);
-			a.accelerate(sf::Vector2f(0.f, playerSpeed));
+			if (!a.isGrounded) {
+				a.setState(Actor::State::Fall);
+				a.accelerate(sf::Vector2f(0.f, playerSpeed));
+			}
+			else {
+				a.setState(Actor::State::Idle);
+				a.isBlocking = true;
+			}
 		});
 	actionBindings[Action::P1Attack].action = derivedAction<Actor>(
 		[playerSpeed](Actor& a, sf::Time dt) {
@@ -170,7 +167,7 @@ void Player::initializeActions()
 			if (a.getState() == Actor::State::Idle || a.getState() == Actor::State::Run) {
 				a.setState(Actor::State::Attack1);
 			}
-			//a.accelerate(sf::Vector2f(playerSpeed, -0.f));
+
 		});
 
 	actionBindings2[Action::P2MoveLeft].action = derivedAction<Actor>(
@@ -179,7 +176,7 @@ void Player::initializeActions()
 				a.setScale(-1 * a.getScale().x, a.getScale().y);
 				a.setDirection(Actor::Direction::Left);
 			}
-			if (a.getState() != Actor::State::Run && a.getPosition().y > 850)
+			if (a.getState() != Actor::State::Run && a.getPosition().y >= a.groundHeight)
 				a.setState(Actor::State::Run);
 
 			a.setVelocity(sf::Vector2f(-playerSpeed, 0.f));
@@ -195,7 +192,7 @@ void Player::initializeActions()
 				a.setScale(-1 * a.getScale().x, a.getScale().y);
 				a.setDirection(Actor::Direction::Right);
 			}
-			if (a.getState() != Actor::State::Run && a.getPosition().y > 850)
+			if (a.getState() != Actor::State::Run && a.getPosition().y >= a.groundHeight)
 				a.setState(Actor::State::Run);
 
 
@@ -208,9 +205,10 @@ void Player::initializeActions()
 		[=](Actor& a, sf::Time dt) {
 			auto playerPosfromTop = a.getBoundingRect().height
 				+ a.getPosition().y;
-			if (a.getPosition().y > 850) {
+			
+			if (a.getPosition().y >= a.groundHeight) {
 
-
+				//max jump height is 650
 				if (playerPosfromTop > 650.f) {
 					if (!a.isJumping && !a.isFalling)
 					{
@@ -222,19 +220,23 @@ void Player::initializeActions()
 					a.accelerate(0.f, -jumpSpeed * 15);
 
 
-
-
 					a.isJumping = false;
 					a.isFalling = true;
 
 				}
+				a.isGrounded = true;
 			}
 		});
 	actionBindings2[Action::P2MoveDown].action = derivedAction<Actor>(
 		[playerSpeed](Actor& a, sf::Time dt) {
 			//the falling is going to be managed when jump animation is finished
-			a.setState(Actor::State::Fall);
-			a.accelerate(sf::Vector2f(0.f, playerSpeed));
+			if (!a.isGrounded) {
+				a.setState(Actor::State::Fall);
+				a.accelerate(sf::Vector2f(0.f, playerSpeed));
+			}
+			else {
+				a.isBlocking = true;
+			}
 		});
 	actionBindings2[Action::P2Attack].action = derivedAction<Actor>(
 		[playerSpeed](Actor& a, sf::Time dt) {
@@ -249,28 +251,15 @@ void Player::initializeActions()
 			if (a.getState() == Actor::State::Idle || a.getState() == Actor::State::Run) {
 				a.setState(Actor::State::Attack1);
 			}
-			//a.accelerate(sf::Vector2f(playerSpeed, -0.f));
 		});
 
 
 	for (auto& pair : actionBindings) {
-
 		pair.second.category = Category::Player1;
-		//if (Actor::Type::Hero1 == actor1)
-		//	pair.second.category = Category::Hero1;
-		//if (Actor::Type::Hero2 == actor1)
-		//	pair.second.category = Category::Hero2;
-		//if (Actor::Type::Hero3 == actor1)
-		//	pair.second.category = Category::Hero3;
 	}
+
 	for (auto& pair : actionBindings2) {
 		pair.second.category = Category::Player2;
-		//if (Actor::Type::Hero1 == actor1)
-		//	pair.second.category = Category::Hero1;
-		//if (Actor::Type::Hero2 == actor1)
-		//	pair.second.category = Category::Hero2;
-		//if (Actor::Type::Hero3 == actor1)
-		//	pair.second.category = Category::Hero3;
 	}
 
 

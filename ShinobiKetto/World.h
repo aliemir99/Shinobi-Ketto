@@ -126,8 +126,7 @@ private:
 	sf::CircleShape						rightLight3;
 
 	float								roundTimer;
-
-
+	SpriteNode*							blockShield;
 };
 
 

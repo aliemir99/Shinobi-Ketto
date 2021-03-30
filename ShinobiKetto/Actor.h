@@ -24,7 +24,7 @@ public:
 
     };
     enum class State {
-        Dead, Idle, Jump,
+        Dead, Idle, Jump, 
         Attack1, Attack2, Fall, Run, TakeHit, Static, count
     };
     enum class Direction
@@ -41,7 +41,10 @@ public:
     float                               TimeThisJump;
     bool                                JustJumped = false;
     float                               JumpDuration;
+    bool                                isBlocking = false;
+    float                               shieldTimer;
 
+    sf::Sprite                          shield;
     Actor(Type type, const TextureHolder_t& textures, const FontHolder_t& fonts, Category::Type player);
     ~Actor() = default;
     unsigned int                        getCategory() const override;
@@ -61,12 +64,19 @@ public:
     Actor::Direction                    getDirection();
 
     bool                                isCurrentAnimationFinished();
+    //will need a function to deactivate the shield.
+    void                                deactivateShield();
+    // will need a function that will activate the shield for the player in update states x amount of seconds  
+    void                                activateShield();
+
 private:
     void                                updateStates();
     void                                updateCurrent(sf::Time dt, CommandQueue& commands) override;
     void                                drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
     void                                updateMovementPattern(sf::Time dt);
     void                                updateSounds();
+    
+
 private:
     Type                                type_;
     State                               state_;
@@ -87,6 +97,8 @@ private:
     SoundPlayer                         soundplayer;
 
     bool                                canPlayDamageSound;
+
+    sf::Texture                         shieldTexture;
 
 
 
