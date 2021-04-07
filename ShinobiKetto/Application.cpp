@@ -28,6 +28,7 @@ Application::Application()
     , statsText()
     , statsUpdateTime()
     , statsNumFrames(0)
+    , skicon()
 
 {
     window.setKeyRepeatEnabled(false);
@@ -46,6 +47,10 @@ Application::Application()
     statsText.setCharacterSize(10u);
     registerStates();
     stateStack.pushState(StateID::Title);
+
+    skicon.loadFromFile("Media/Textures/Fight/skicon64x64.png");
+
+    window.setIcon(64, 64, skicon.getPixelsPtr());
 
     music.setVolume(25.f);
 }

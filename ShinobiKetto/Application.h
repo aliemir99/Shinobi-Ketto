@@ -49,5 +49,6 @@ private:
 	std::string				platformFilePath;
 	std::string				hudLeftFilePath;
 	std::string				hudRightFilePath;
+	sf::Image				skicon;
 };
 

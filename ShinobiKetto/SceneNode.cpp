@@ -138,7 +138,7 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	drawChildren(target, states);
 
 	//draw bounding rectangle to track collisions
-	drawBoundingRect(target, states);
+	//drawBoundingRect(target, states);
 
 }
 
