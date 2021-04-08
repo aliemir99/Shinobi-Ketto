@@ -10,3 +10,6 @@
 
 ![game](https://user-images.githubusercontent.com/54895362/110476038-f0aa5f80-80b7-11eb-93a5-693dc6c0af68.PNG)
 
+![game](https://user-images.githubusercontent.com/54895362/114067124-d7413280-9872-11eb-848a-de0148b1651d.PNG)
+
+
