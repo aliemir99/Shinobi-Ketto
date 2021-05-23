@@ -1,4 +1,5 @@
 # Shinobi-Ketto
+
 2D Fighting game made using SFML and GEX engine (built in class) 
 
 
@@ -12,4 +13,5 @@
 
 ![game](https://user-images.githubusercontent.com/54895362/114067124-d7413280-9872-11eb-848a-de0148b1651d.PNG)
 
-
+by
+Ali Emir Samlioglu
