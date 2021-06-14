@@ -15,4 +15,5 @@
 
 by
 Ali Emir Samlioglu
-In collaboration with Berkant Seyhan
+and with the collaboration of 
+Berkant Seyhan
