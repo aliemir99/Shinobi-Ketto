@@ -15,5 +15,3 @@
 
 by
 Ali Emir Samlioglu
-and with the collaboration of 
-Berkant Seyhan
